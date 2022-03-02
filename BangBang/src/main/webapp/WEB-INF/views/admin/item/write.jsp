@@ -6,6 +6,7 @@
 <%@include file="../../includes/bangbang-nav.jsp"%>
 
 <main>
+<div class="container px-4 px-lg-5 my-5">
 <form name="form" method="post" action="${pageContext.request.contextPath}/admin/item/insert">
 	<div class="margin-top first">
 		<h3 class="hidden">게시물 등록</h3>
@@ -90,5 +91,6 @@
 		<input class="btn-text btn-default" type="submit" value="등록" /> <a class="btn-text btn-cancel" href="list">취소</a>
 	</div>
 </form>
+</div>
 </main>
 <%@include file="../../includes/bangbang-footer.jsp"%>

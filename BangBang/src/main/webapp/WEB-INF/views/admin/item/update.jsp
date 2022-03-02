@@ -7,6 +7,7 @@
 <%@include file="../../includes/bangbang-nav.jsp"%>
 
 <body>
+<div class="container px-4 px-lg-5 my-5">
 	<div id="content" action="${pageContext.request.contextPath}/admin/board/update">
 		<h3>상품 정보 수정</h3>
 		<hr>
@@ -94,6 +95,7 @@
 		
 		</form>
 	
+	</div>
 	</div>
 </body>
 <%@include file="../../includes/bangbang-footer.jsp"%>
