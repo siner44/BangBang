@@ -86,7 +86,7 @@
 				<div class="form-group row">
 					<label for="photo1" class="col-sm-2 col-form-label">사진1 등록</label>
 					<div class="col-sm-10">
-						<input type="file" name="photo1" id="photo1" class="form-control" required>
+						<input type="file" name="photo1" id="photo1" class="form-control">
 						<div class="select_img2"><img src="" /></div>
 						<script>
  							 $("#photo1").change(function(){
@@ -124,12 +124,17 @@
 				<div class="form-group row">
 					<label for="pw" class="col-sm-2 col-form-label">내용</label>
 					<div id="col-sm-10">
-						<textarea id="content" name="content" ></textarea>
+						<textarea id="content" name="content" >
+						용량 : ${item.ml}                  
+						도수 : ${item.proof}
+						국가 : ${item.location}
+						종류 : ${item.type}
+						맛 : ${item.taste}
+						향 : ${item.scent}
+						</textarea>
 						<script type="text/javascript">
-						$(function(){
-							CKEDITOR.replace('content',{
-								filebrowserUploadUrl: '${pageContext.request.contextPath}/mine/upload.do'	
-							});
+						CKEDITOR.replace('content', {
+							filebrowserUploadUrl : '${pageContext.request.contextPath}/admin/notice_board/imageUpload'
 						});
 						</script>
 					</div>

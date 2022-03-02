@@ -6,13 +6,13 @@
 	
 <%@include file="../includes/bangbang-nav.jsp"%>
 
-<body>
+<main role="main" class="container">
 
-	<div>
+	<div class="my-3 p-3 bg-white rounded shadow-sm ">
 		<h3>상품 정보 수정</h3>
 		<hr>
 		<form method="post" enctype="multipart/form-data" action="${pageContext.request.contextPath}/admin/board/update">
-			<table>
+			<table class="table">
 				<tr>
 					<th>제목</th>
 					<td><input type="hidden" name="iidx" value="${board.iidx}"> 
@@ -114,5 +114,5 @@
 		</form>
 	
 	</div>
-</body>
+</main>
 <%@include file="../includes/bangbang-footer.jsp"%>

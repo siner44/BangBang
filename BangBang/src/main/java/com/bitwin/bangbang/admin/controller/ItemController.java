@@ -55,7 +55,7 @@ public class ItemController {
 	@RequestMapping(value = "update", method = RequestMethod.POST)
 	public String update(@ModelAttribute Item item) {
 		itemService.update(item);
-		return "redirect:list";
+		return "redirect:/admin/item/list";
 	}
 
 	@RequestMapping(value = "delete")

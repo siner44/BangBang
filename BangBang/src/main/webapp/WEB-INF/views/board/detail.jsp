@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@  page session="true" %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <style>
@@ -10,6 +11,25 @@
  div.reviewContent textarea { font-size:16px; font-family:'맑은 고딕', verdana; padding:10px; width:500px; height:200px; }
  div.reviewContent button { font-size:20px; padding:5px 10px; margin:10px 0; background:#fff; border:1px solid #ccc; }
  div.reviewContent button.modal_cancel { margin-left:20px; }
+</style>
+<style>
+ section.reviewForm { padding:30px 0; }
+ section.reviewForm div.input_area { margin:10px 0; }
+ section.reviewForm textarea { font-size:16px; font-family:'맑은 고딕', verdana; padding:10px; width:1100px;; height:150px; }
+ 
+ section.reviewList { padding:30px 0; }
+ section.reviewList ol { padding:0; margin:0; }
+ section.reviewList ol li { padding:10px 0; border-bottom:2px solid #eee; }
+ section.reviewList div.userInfo { }
+ section.reviewList div.userInfo .userName { font-size:24px; font-weight:bold; }
+ section.reviewList div.userInfo .rating { font-size:15px; font-weight:bold; margin-left:10px;}
+ section.reviewList div.userInfo .date { color:#999; display:inline-block; margin-left:10px; }
+ section.reviewList div.reviewContent { padding:10px; margin:20px 0; }
+ 
+ .rating_div { padding-top: 10px;}
+ .rating_div h4{margin : 0;}
+  select{margin: 15px; width: 100px; height: 40px; text-align: center; font-size: 16px; font-weight: 600;}
+ 
 </style>
 
 <div class="reviewModal">
@@ -56,14 +76,14 @@ $(".modal_cancel").click(function(){
 				str += "<li data-ridx='" + this.ridx + "'>"
 				+ "<div class='userInfo'>"
 				+ "<span class='userName'>"+ this.userName + "</span>"
-				+ "<span class='rating'>"+ this.rating + "</span>"
+				+ "<span class='rating'>"+ this.rating + "점</span>"
 				+ "<span class='date'>"+ date + "</span>"
 				+ "</div>"
 				+ "<div class='content'>"+ this.content + "</div>"
 				
-				+ "<c:if test='${member != null}'>"
+				+ "<c:if test='${loginInfo != null}'>"
 				+ "<div class='reviewFooter'>"
-				+ "<button type='button' class='update' data-ridx='" + this.ridx + "'>수정</button>"
+				/* + "<button type='button' class='update' data-ridx='" + this.ridx + "'>수정</button>" */
 				+ "<button type='button' class='delete' data-ridx='" + this.ridx + "'>삭제</button>"
 				+ "</div>"
 				+ "</c:if>"
@@ -95,19 +115,18 @@ $(".modal_cancel").click(function(){
 							<i class="bi-cart-fill me-1"></i> Add to cart
 						</button>
 						<div class="w3-border w3-center w3-padding">
-						<c:if test="${ member.uidx == null }">
+						<c:if test="${ loginInfo.uidx == null }">
 							추천 기능은 <button type="button" id="newLogin"><b class="w3-text-blue">로그인</b></button> 후 사용 가능합니다.<br />
 							<i class="fa fa-heart" style="font-size:16px;color:red"></i>
 							<span class="rec_count"></span>					
 						</c:if>
-						<c:if test="${ member.uidx != null }">
-							<button class="w3-button w3-black w3-round" id="rec_update">
+						<c:if test="${ loginInfo.uidx != null }">
+							<button class="w3-button w3-black w3-round" id="rec_update" name="rec_update">
 								<i class="fa fa-heart" style="font-size:16px;color:red"></i>
 								&nbsp;<span class="rec_count"></span>
 							</button> 
 						</c:if>
 						<script>
-						$(function(){
 							// 추천버튼 클릭시(추천 추가 또는 추천 제거)
 							$("#rec_update").click(function(){
 								$.ajax({
@@ -115,7 +134,7 @@ $(".modal_cancel").click(function(){
 					                type: "POST",
 					                data: {
 					                    no: '${board.iidx}',
-					                    id: '${member.uidx}'
+					                    id: '${loginInfo.uidx}'
 					                },
 					                success: function () {
 								        recCount();
@@ -142,27 +161,41 @@ $(".modal_cancel").click(function(){
 					</div>
 				</div>
 			</div>
+		<div>${board.content}</div>
+	<hr>
 		</div>
 	</section>
-	<div>${board.content}</div>
-
-	<div id="review">
+	
+	<div class="container px-4 px-lg-5 my-5">
+    <h2>리뷰</h2>
+	</div>
+	<div class="container px-4 px-lg-5 my-5" id="review">
 		
-		<c:if test="${member == null}">
-			<p>리뷰를 남기려면 <a herf="">로그인</a>하세요.</p>
+		<c:if test="${loginInfo == null}">
+			<p>리뷰를 남기려면 <a herf="${pageContext.request.contextPath}/member/login">로그인</a>하세요.</p>
 		</c:if>
 		
-		<c:if test="${member != null}">
+		<c:if test="${loginInfo != null}">
 		<section class="reviewForm">
 			<form role="form" method="post">
 				<input type="hidden" name="iidx" id="iidx" value="${item.iidx}">
 				<input type="hidden" name="uidx" value="1">
-				<input type="range" min="1" max="5" step="1" value="5" id="rating" name="rating">
+				<div class="rating_div">
+				<h4>평점</h4>
+				<select name="rating" id ="rating">
+					<option value="1">1.0</option>
+					<option value="2">2.0</option>
+					<option value="3">3.0</option>
+					<option value="4">4.0</option>
+					<option value="5">5.0</option>
+				</select>
+				</div> 
+				<!-- <input type="range" min="1" max="5" step="1" value="5" id="rating" name="rating"> -->
 				<div class="input_area">
-					<textarea name="content" id="content"></textarea>
+					<textarea name="content" id="content" cssClass="form-control" rows="5"></textarea>
 				</div>
 				<div class="input_area">
-					<button type="button" id="review_btn">리뷰 등록</button>
+					<button type="button" id="review_btn" class="btn btn-block btn-primary">리뷰 등록</button>
 					<script>
  					$("#review_btn").click(function(){
   
@@ -176,6 +209,7 @@ $(".modal_cancel").click(function(){
    							content : content,
    							rating : rating
   						};
+ 						console.log(data)
   
  						$.ajax({
   					 		url : "${pageContext.request.contextPath}/board/detail/review-reg",
@@ -221,13 +255,15 @@ $(".modal_cancel").click(function(){
 			 	  if(check){
 				  var data = {ridx : $(this).attr("data-ridx")};
 				   
+				  console.log(data)
+				  
 				  $.ajax({
 				   url : "${pageContext.request.contextPath}/board/detail/review-del",
 				   type : "post",
 				   data : data,
-				   success : function(){
+				   success : function(result){
 					   if(result == 1){
-						    replyList();
+						    reviewList();
 						} else {
 							alert("본인이 작성한 댓글만 삭제 가능합니다.")
 						}
@@ -271,7 +307,7 @@ $(".modal_cancel").click(function(){
 		</div>
 
 
-	<div class="margin-top text-align-center">
+	<div class="container px-4 px-lg-5 my-5">
 		<a class="btn btn-list" href="${pageContext.request.contextPath}/board/list">목록</a>
 		<a class="btn btn-list" href="${pageContext.request.contextPath}/admin/board/delete?iidx=${board.iidx}">삭제</a>
 	</div>

@@ -7,11 +7,11 @@
 <%@include file="../../includes/bangbang-nav.jsp"%>
 
 <body>
-	<div id="content">
+	<div id="content" action="${pageContext.request.contextPath}/admin/board/update">
 		<h3>상품 정보 수정</h3>
 		<hr>
-		<form method="post">
-			<table>
+		<form method="post" >
+			<table class="table">
 				<tr>
 					<td>이름</td>
 					<td>

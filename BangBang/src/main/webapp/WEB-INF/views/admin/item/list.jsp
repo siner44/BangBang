@@ -5,7 +5,8 @@
 <%@include file="../../includes/bangbang-header.jsp"%>
 <%@include file="../../includes/bangbang-nav.jsp"%>
 
-<main class="main">
+<main class="py-5">
+<div class="container px-4 px-lg-5 my-5">
 	<h2 class="main title">목록</h2>
 	<div class="search-form margin-top first align-right">
 		<h3 class="hidden">상품 검색</h3>
@@ -109,11 +110,12 @@
 	
 			<script>
 		function delItem(iidx) {
-			if (confirm("해당 회원 정보를 삭제하시겠습니까?")) {
-				location.href = '${pageContext.request.contextPath}/item/delete?iidx=' + iidx;
+			if (confirm("해당 상품 정보를 삭제하시겠습니까?")) {
+				location.href = '${pageContext.request.contextPath}/admin/item/delete?iidx=' + iidx;
 			}
 		}
 	</script>
+	</div>
 </main>
 
 <%@include file="../../includes/bangbang-footer.jsp"%>

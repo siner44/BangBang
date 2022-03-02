@@ -7,7 +7,7 @@
 <%@include file="../includes/bangbang-nav.jsp"%>
 
 <main class="main">
-  <div class="album py-5 bg-light">
+  <div class="container px-4 px-lg-5 my-5">
     	<div class="search-form margin-top first align-right">
 		<h3 class="hidden">상품 게시물 검색</h3>
 		<form class="table-form">
@@ -40,8 +40,8 @@
 		
 		<c:if test="${not empty board.list}" >
 
-		<c:forEach var="list" items="${board.list}">
       <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+		<c:forEach var="list" items="${board.list}">
         <div class="col">
           <div class="card shadow-sm">
             <image src="${pageContext.request.contextPath}/resources/uploadfile/${list.thumb}">
@@ -61,8 +61,8 @@
             </div>
           </div>
         </div>
-      </div>
       </c:forEach>
+      </div>
       </c:if>
    </div>
     <div class="btn-toolbar" role="toolbar" >

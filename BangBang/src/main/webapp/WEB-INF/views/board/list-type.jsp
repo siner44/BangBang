@@ -7,7 +7,7 @@
 <%@include file="../includes/bangbang-nav.jsp"%>
 
 <main class="main">
-  <div class="album py-5 bg-light">
+  <div class="container px-4 px-lg-5 my-5">
     	<div class="search-form margin-top first align-right">
 		<h3 class="hidden">상품 게시물 검색</h3>
 		<form class="table-form">

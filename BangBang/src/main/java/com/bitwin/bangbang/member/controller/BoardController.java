@@ -22,7 +22,8 @@ import com.bitwin.bangbang.admin.service.BoardService;
 import com.bitwin.bangbang.admin.service.ItemService;
 import com.bitwin.bangbang.admin.service.ReviewService;
 import com.bitwin.bangbang.admin.service.WishService;
-import com.bitwin.bangbang.member.domain.Member;
+import com.bitwin.bangbang.member.domain.LoginInfo;
+import com.bitwin.bangbang.member.service.MemberEditService;
 
 @Controller
 @RequestMapping("/board/*")
@@ -30,24 +31,25 @@ public class BoardController {
 
 	@Autowired
 	private BoardService boardService;
-	
+
 	@Autowired
 	private ItemService itemService;
-	 
+
 	@Autowired
 	private ReviewService reviewService;
-	
+
 	@Autowired
 	private WishService wishService;
 	
-
+	@Autowired
+	private MemberEditService editService;
 
 	@RequestMapping("list")
 	public String getListPage(SearchParams params, Model model) throws SQLException {
 		model.addAttribute("board", boardService.getPageView(params));
 		return "board/list";
 	}
-	
+
 	@RequestMapping("list-type")
 	public void getListPage(SearchParams params, Model model, @RequestParam("type") String type) throws SQLException {
 		params.setKeyword(type);
@@ -63,72 +65,70 @@ public class BoardController {
 
 	@ResponseBody
 	@RequestMapping(value = "/detail/review-list", method = RequestMethod.GET)
-	public List<ReviewList> getReviewList(@RequestParam("iidx") int iidx){
+	public List<ReviewList> getReviewList(@RequestParam("iidx") int iidx) {
 		List<ReviewList> review = reviewService.read(iidx);
 		return review;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/detail/review-reg", method = RequestMethod.POST)
-	public void write(Review review, HttpSession session) throws Exception {
-		
-		// Member member = (Member)session.getAttribute("member");
-		// review.setUidx(member.getUserId());
+	public void write(Review review, Model model, HttpSession session) throws Exception {
+		System.out.println(review);
+		LoginInfo loginInfo = (LoginInfo) session.getAttribute("loginInfo");
+		review.setUidx(loginInfo.getUidx());
+//		model.addAttribute("member", editService.getMember(uidx));
 		
 		reviewService.create(review);
-	} 
-	
+	}
+
 	@ResponseBody
 	@RequestMapping(value = "/detail/review-del", method = RequestMethod.POST)
 	public int deleteReview(Review review, HttpSession session) throws Exception {
-	 int result = 0;
-	 
-	 // Member member = (Member)session.getAttribute("member");
-	 int uidx = reviewService.reviewUidCheck(review.getRidx());
-	 
-		/*
-		 * if(member.getUidx() == uidx) {
-		 * 	review.setUidx(member.getUidx());
-		 * 	reviewService.delete(review);
-		 * 
-		 * 	result = 1;
-		 * }
-		 */
-	 
-	 return result; 
+		int result = 0;
+		
+		LoginInfo loginInfo = (LoginInfo) session.getAttribute("loginInfo");
+		int uidx = reviewService.reviewUidCheck(review.getRidx());
+
+		if (loginInfo.getUidx() == uidx) {
+			review.setUidx(loginInfo.getUidx());
+			reviewService.delete(review);
+
+			result = 1;
+		}
+
+		return result;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/detail/review-up", method = RequestMethod.POST)
 	public int updateReview(Review review, HttpSession session) throws Exception {
-	 int result = 0;
-	 
-	 Member member = (Member)session.getAttribute("member");
-	 int uidx = reviewService.reviewUidCheck(review.getRidx());
-	 
+		int result = 0;
 		
-		  if(member.getUidx() == uidx) { 
-		  review.setUidx(member.getUidx());
-		  reviewService.update(review);
-		  result = 1; 
-		  }
-		 
-	 return result; 
+		LoginInfo loginInfo = (LoginInfo) session.getAttribute("loginInfo");
+		int uidx = reviewService.reviewUidCheck(review.getRidx());
+
+		if (loginInfo.getUidx() == uidx) {
+			review.setUidx(loginInfo.getUidx());
+			reviewService.update(review);
+			result = 1;
+		}
+
+		return result;
 	}
-	
-	@RequestMapping(value = "/detail/wishcheck", method= RequestMethod.POST)
-	public void wishCheck(@RequestParam("iidx") int iidx, int uidx) {
+
+	@RequestMapping(value = "/detail/wishcheck", method = RequestMethod.POST)
+	public void wishCheck(@RequestParam("iidx") int iidx, HttpSession session) {
+		LoginInfo loginInfo = (LoginInfo) session.getAttribute("loginInfo");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iidx", iidx);
-		map.put("uidx", uidx);
-		
+		map.put("uidx", loginInfo.getUidx());
+
 		wishService.wishUpdate(map);
 	}
-	@RequestMapping(value = "/detail/wishcount", method= RequestMethod.POST)
+
+	@RequestMapping(value = "/detail/wishcount", method = RequestMethod.POST)
 	public void wishCount(@RequestParam("iidx") int iidx) {
 		wishService.wishCnt(iidx);
 	}
-	
-	
-	
+
 }
